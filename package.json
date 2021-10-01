@@ -1,0 +1,20 @@
+{
+  "name": "pong",
+  "version": "1.0.0",
+  "description": "creating pong game with javascript",
+  "type": "module",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/zipingH/PongGame.git"
+  },
+  "author": "Ziping Huang",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/zipingH/PongGame/issues"
+  },
+  "homepage": "https://github.com/zipingH/PongGame#readme"
+}
