@@ -1,5 +1,6 @@
-import User from './user.js';
-import Bot from './bot.js';
+import User from './script/user.js';
+import Bot from './script/bot.js';
+import Net from './script/net.js';
 
 // find the <canvas> element
 const canvas = document.getElementById("pong");
@@ -51,14 +52,9 @@ let rectX = 0;
 // setInterval(render, 1000);
 
 //create net object
-const net = {
-  //center the net with x position
-  x: canvas.width/2 - 2/2,
-  y: 0,
-  width: 2,
-  height: 10,
-  color: "WHITE"
-};
+//center the net with x position
+//(x, y, width, height, color)
+var net = new Net(canvas.width/2 - 2/2, 0, 2, 10, "black");
 
 function drawNet(){
   //increment i by 15px
@@ -66,7 +62,8 @@ function drawNet(){
     drawRect(net.x, net.y + i, net.width, net.height, net.color);
   }
 }
-// drawNet();
+
+drawNet();
 
 
 
@@ -79,11 +76,13 @@ var p1Score = 0;
 var p2Score = 0;
 //(x, y, width, height, color, score)
 var user = new User(0, canvas.height / 2 - 100 / 2, 10, 100, "black", p1Score);
+var bot = new Bot(canvas.width-10, canvas.height / 2 - 100 / 2, 10, 100, "black", p1Score);
 
-var bot = new Bot(canvas.width - 10, canvas.height / 2 - 100 / 2, 100, "black", p2Score);
-// console.log(user);
-// console.log(user.height);
+console.log(user);
+console.log(net);
+console.log(user.height);
+console.log(net.height);
 
-//draws user and bot
-// drawRect(user.x, user.y, user.width, user.height, user.color);
-// drawRect(bot.x,bot.y, bot.width, bot.height, bot.color);
+// draws user and bot
+drawRect(user.x, user.y, user.width, user.height, user.color);
+drawRect(bot.x, bot.y, bot.width, bot.height, bot.color);
