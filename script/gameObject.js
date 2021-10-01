@@ -1,9 +1,6 @@
 export default class GameObject{
-    constructor(x, y, width, height, color){
+    constructor(x, y){
         this.x = x;
         this.y = y;
-        this.width = width;
-        this.height = height;
-        this.color = color;
     }
 }

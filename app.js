@@ -1,6 +1,7 @@
 import User from './script/user.js';
 import Bot from './script/bot.js';
 import Net from './script/net.js';
+import Ball from './script/ball.js';
 
 // find the <canvas> element
 const canvas = document.getElementById("pong");
@@ -8,19 +9,16 @@ const canvas = document.getElementById("pong");
 // getContext() is a built-in HTML object, with properties and methods for drawing
 const context = canvas.getContext("2d");
 
-context.fillStyle = "black";
-//(x, y, width, height)
-context.fillRect(100, 200, 50, 75);
-
-//draws the ball
-context.fillStyle = "red"
-//Begin first path of the ball
-context.beginPath();
-//(x, y, radius, start angle, end angle, direction), circle starts from 0 deg and ends at 360 deg (pi * 2).
-//direction = false  -> drawn clockwise direction
-context.arc(300, 350, 100, 0, Math.PI * 2)
-context.closePath();
-context.fill();
+//create Objects
+//(x, y, width, height, color)
+var net = new Net(0, canvas.height/2 - 2/2, 10, 2, "black");
+// (x, y, radius, color)
+var ball = new Ball(canvas.width/2, canvas.height/2, 15, "black");
+ //(x, y, width, height, color, score)
+var paddle_width = 100;
+var paddle_height = 10;
+var user = new User(canvas.width/2 - paddle_width/ 2, canvas.height - (paddle_height + 10), paddle_width, paddle_height, "blue", 0);
+var bot = new Bot(canvas.width/2 - paddle_width/2, 10, paddle_width, paddle_height, "red", 0);
 
 
 function drawRect(x, y, w, h, color) {
@@ -42,47 +40,59 @@ function drawText(text, x, y, color) {
   context.fillText(text, x, y);
 }
 
-let rectX = 0;
-// function render() {
-//   drawRect(0, 0, 600, 400, "black");
-//   drawRect(rectX, 100, 100, 100, "red");
-//   rectX = rectX + 100;
-// }
-// //run render function every 1000 milliseconds = 1sec.
-// setInterval(render, 1000);
+function drawBoard(){
+   drawRect(0, 0, 400, 600, "white");  
+}
 
-//create net object
-//center the net with x position
-//(x, y, width, height, color)
-var net = new Net(canvas.width/2 - 2/2, 0, 2, 10, "black");
 
 function drawNet(){
-  //increment i by 15px
-  for(let i = 0; i < canvas.height; i+=15 ){
-    drawRect(net.x, net.y + i, net.width, net.height, net.color);
+  //increment i by 15px for net
+  for(let i = 0; i < canvas.width; i+= 15 ){
+    drawRect(net.x + i, net.y, net.width, net.height, net.color);
   }
 }
 
-drawNet();
+function drawBall(){
+  drawCircle(ball.x, ball.y, ball.radius, ball.color);
+}
+
+function drawPlayer(){
+  // draws user and bot
+  drawRect(user.x, user.y, user.width, user.height, user.color);
+  drawRect(bot.x, bot.y, bot.width, bot.height, bot.color);
+}
+
+function drawScore(){
+  //draw the Score
+  drawText(user.score, canvas.width/2 - 20, canvas.height/2 + (75 + 75), "Blue");
+  drawText(bot.score, canvas.width/2 - 20, canvas.height/2 - 75, "red");
+}
+
+//render to create movements
+function render() {
+  drawBoard();
+  drawScore();
+  drawNet();
+  drawPlayer();
+  drawBall();
+}
+
+function update(){
+
+}
+
+
+function game(){
+  update();
+  render();
+}
+const framePerSecond = 60;
+//call game(); 60times every 1000ms = 1sec
+setInterval(game, 1000/framePerSecond); 
 
 
 
-
-
-
-
-
-var p1Score = 0;
-var p2Score = 0;
-//(x, y, width, height, color, score)
-var user = new User(0, canvas.height / 2 - 100 / 2, 10, 100, "black", p1Score);
-var bot = new Bot(canvas.width-10, canvas.height / 2 - 100 / 2, 10, 100, "black", p1Score);
-
-console.log(user);
+console.log(ball);
 console.log(net);
-console.log(user.height);
-console.log(net.height);
-
-// draws user and bot
-drawRect(user.x, user.y, user.width, user.height, user.color);
-drawRect(bot.x, bot.y, bot.width, bot.height, bot.color);
+console.log(user);
+console.log(bot);
