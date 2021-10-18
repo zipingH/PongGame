@@ -1,6 +1,13 @@
-h1{
+/* h1{
   text-align: center;
-}
+} */
+
+body{ 
+  margin: 0; 
+  padding: 0;
+  background: #000;
+  }
+
 
 /* canvas section */
 canvas{
@@ -20,3 +27,4 @@ canvas{
   color: blue;
   text-align: right ;
 } */
+

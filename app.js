@@ -11,11 +11,12 @@ const context = canvas.getContext("2d");
 
 //create Objects
 //(x, y, width, height, color)
-var net = new Net(0, canvas.height / 2 - 2 / 2, 10, 2, "black");
+var net = new Net(0, canvas.height / 2 - 2 / 2, 10, 2, "White");
+
 // ball (x, y, radius, color, speed, velocityX, velocityY)
-var ball = new Ball(canvas.width / 2, canvas.height / 2, 15, "black", 5, 5, 5);
+var ball = new Ball(canvas.width / 2, canvas.height / 2, 8, "White", 5, 5, 5);
 //user (x, y, width, height, color, score)
-var paddle_width = 100;
+var paddle_width = 70;
 var paddle_height = 10;
 var user = new User(canvas.width / 2 - paddle_width / 2, canvas.height - (paddle_height + 10), paddle_width, paddle_height, "blue", 0);
 var bot = new Bot(canvas.width / 2 - paddle_width / 2, 10, paddle_width, paddle_height, "red", 0);
@@ -41,7 +42,7 @@ function drawText(text, x, y, color) {
 }
 
 function drawBoard() {
-  drawRect(0, 0, canvas.width, canvas.height, "white");
+  drawRect(0, 0, canvas.width, canvas.height, "black");
 }
 
 
@@ -64,8 +65,8 @@ function drawPlayer() {
 
 function drawScore() {
   //draw the Score
-  drawText(user.score, canvas.width / 2 - 20, canvas.height / 2 + (75 + 75), "Blue");
-  drawText(bot.score, canvas.width / 2 - 20, canvas.height / 2 - 75, "red");
+  drawText(user.score, canvas.width / 2 - 20, canvas.height / 2 + (75 + 75), user.color);
+  drawText(bot.score, canvas.width / 2 - 20, canvas.height / 2 - 75, bot.color);
 }
 
 function resetBall(){
@@ -73,6 +74,7 @@ function resetBall(){
   ball.y = canvas.height/2;
   ball.speed = 5;
   //reset ball and goes to the opposite direction
+  //winner serve the ball
   ball.velocityY = -ball.velocityY;
 }
 
@@ -109,18 +111,29 @@ function render() {
   drawBall();
 }
 
+//simple Ai to control bot paddle.
+function bot_Controls(){
+  let botLevel = 0.1;
+  //bot paddle follows the ball
+  let centerOfBotPaddle_To_Ball = (ball.x - (bot.x + bot.width/2));
+  bot.x += centerOfBotPaddle_To_Ball * botLevel;
+}
+
 function update() {
   //move ball in the x direction.
   ball.x += ball.velocityX;
   //move ball in the y direction.
   ball.y += ball.velocityY;
 
+  //simple Ai to control bot paddle.
+  bot_Controls();
+
   // make sure the ball stays within the range/edges of the canvas width (0 to canvas.width) by going to the opposite directions.
   if (ball.x + ball.radius > canvas.width || ball.x - ball.radius < 0) {
     ball.velocityX = - ball.velocityX;
   }
 
-  //check if bot or user has collision with the ball.
+  //check whether the bot or user will have collision with the ball.
   let player = (ball.y < canvas.height / 2) ? bot : user;
 
   if (collision(ball, player)) {
@@ -140,7 +153,6 @@ function update() {
     // vertical pong direction
     ball.velocityX = ball.speed * Math.sin(angle_radians);
     ball.velocityY = direction * ball.speed * Math.cos(angle_radians);
-
 
     ball.speed += 0.1;
   }
@@ -164,8 +176,6 @@ function movePaddle(event){
   let rect = canvas.getBoundingClientRect();
   user.x = event.clientX - rect.left - user.width/2;
 }
-
-
 
 function game() {
   update();
